@@ -54,4 +54,4 @@ jobs:
         run: vendor/bin/phpstan analyse --memory-limit=2G
 
       - name: 3. Run Test Suite (PHPUnit / Pest)
-        run: php artisan test --parallel  
+        run: php artisan test
