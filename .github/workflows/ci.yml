@@ -10,6 +10,7 @@ jobs:
   quality-gate:
     name: Lint, Static Analysis & Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     steps:
       - name: Checkout Code
@@ -40,6 +41,11 @@ jobs:
         run: |
           cp .env.example .env
           php artisan key:generate
+
+      - name: Dump Autoload & Package Discover
+        run: |
+          composer dump-autoload --optimize --no-interaction
+          php artisan package:discover --no-interaction
 
       - name: 1. Code Style Check (Laravel Pint)
         run: vendor/bin/pint --test
