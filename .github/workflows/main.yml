@@ -25,6 +25,9 @@ jobs:
       - name: Validate Composer Configuration
         run: composer validate --strict
 
+      - name: Install Dependencies
+        run: composer install --prefer-dist --no-interaction --no-progress
+
       - name: Cache Composer Dependencies
         uses: actions/cache@v4
         with:
