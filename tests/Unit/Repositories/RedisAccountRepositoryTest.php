@@ -73,7 +73,7 @@ class RedisAccountRepositoryTest extends TestCase
                 return $deleted;
             });
 
-        $this->repository = new RedisAccountRepository;
+        $this->repository = new RedisAccountRepository();
     }
 
     public function testSavesAndFindsAccountById(): void

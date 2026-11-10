@@ -18,7 +18,7 @@ class CacheAccountRepository implements AccountRepositoryInterface
     {
         $data = Cache::get(self::KEY_PREFIX . $id);
 
-        if (!is_array($data) || !isset($data['id'], $data['balance'])) {
+        if (! is_array($data) || ! isset($data['id'], $data['balance'])) {
             return null;
         }
 
@@ -38,7 +38,7 @@ class CacheAccountRepository implements AccountRepositoryInterface
         /** @var array<int, string> $index */
         $index = is_array($rawIndex = Cache::get(self::INDEX_KEY)) ? $rawIndex : [];
 
-        if (!in_array($account->id, $index, true)) {
+        if (! in_array($account->id, $index, true)) {
             $index[] = $account->id;
             Cache::forever(self::INDEX_KEY, $index);
         }

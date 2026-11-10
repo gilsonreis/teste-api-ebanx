@@ -5,8 +5,11 @@
             "case": "camel_case"
         },
         "new_with_parentheses": {
-            "named_class": true
+            "named_class": true,
+            "anonymous_class": false
+        },
+        "concat_space": {
+            "spacing": "one"
         }
     }
 }
-
