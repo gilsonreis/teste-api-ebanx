@@ -61,4 +61,3 @@ class ResetEndpointTest extends TestCase
         $response->assertStatus(405);
     }
 }
-

@@ -44,4 +44,3 @@ class ResetStateUseCaseTest extends TestCase
         $this->assertSame('OK', $output->toValue());
     }
 }
-

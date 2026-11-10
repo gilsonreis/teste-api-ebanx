@@ -16,4 +16,3 @@ final readonly class ResetStateUseCaseOutput
         return $this->status;
     }
 }
-
