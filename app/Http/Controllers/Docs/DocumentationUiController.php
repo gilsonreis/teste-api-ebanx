@@ -13,4 +13,3 @@ final class DocumentationUiController
         return view('docs');
     }
 }
-

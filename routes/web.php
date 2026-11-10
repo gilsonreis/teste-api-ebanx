@@ -8,4 +8,3 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/docs', DocumentationUiController::class)->name('docs.ui');
 Route::get('/docs/openapi.yaml', DocumentationSpecController::class)->name('docs.spec');
-
