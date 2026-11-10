@@ -15,4 +15,3 @@ final readonly class GetBalanceUseCaseOutput
         return (string) $this->balance;
     }
 }
-

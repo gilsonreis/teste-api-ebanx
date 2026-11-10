@@ -46,4 +46,3 @@ class GetBalanceRequest extends FormRequest
         );
     }
 }
-

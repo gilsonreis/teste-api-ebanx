@@ -13,4 +13,3 @@ class AccountNotFoundException extends Exception
         parent::__construct(sprintf('Account with ID "%s" not found.', $accountId));
     }
 }
-

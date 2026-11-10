@@ -59,4 +59,3 @@ class GetBalanceUseCaseTest extends TestCase
         $this->assertSame('1234', $input->accountId);
     }
 }
-

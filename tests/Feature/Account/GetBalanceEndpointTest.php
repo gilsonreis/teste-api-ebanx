@@ -75,4 +75,3 @@ class GetBalanceEndpointTest extends TestCase
         $response->assertStatus(405);
     }
 }
-

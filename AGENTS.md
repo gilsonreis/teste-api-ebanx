@@ -89,6 +89,7 @@ A especificação da API deve seguir o modelo **Spec-First**, com centralizaçã
 2. **Atomicidade em Operações Compostas:** Em operações que envolvam alteração concorrente de mais de uma entidade (como transferências entre contas), garante-se a integridade global: caso a operação falhe em um dos nós, nenhum efeito colateral deve ser consolidado no outro.
 3. **Idempotência de Operações de Leitura:** Endpoints sob o verbo `GET` destinam-se exclusivamente à consulta e jamais devem gerar efeitos colaterais ou alterar estados de armazenamento.
 4. **Tipagem Estrita Global:** Todo arquivo PHP deve iniciar com a declaração `declare(strict_types=1);`, impondo tipos explícitos em argumentos, retornos e propriedades.
+5. **Quebra de Linha Final Única (Single Blank Line at EOF):** Todo arquivo de código deve terminar estritamente com apenas uma quebra de linha ao final do arquivo (`single_blank_line_at_eof`), sem linhas em branco extras nem ausência de quebra de linha, em conformidade com o padrão do Laravel Pint.
 
 ---
 
@@ -105,4 +106,4 @@ A especificação da API deve seguir o modelo **Spec-First**, com centralizaçã
 - [ ] O contrato do endpoint está fielmente documentado no `openapi.yaml` com todos os códigos de retorno?
 - [ ] A visualização interativa em `/docs` opera em conformidade com o contrato?
 - [ ] A suíte de testes (Feature e Unit) cobre fluxos felizes, falhas de negócio e idempotência de leitura?
-- [ ] A base de código está validada pelas ferramentas de análise estática e padronização de estilo sem apontamentos?
+- [ ] A base de código está validada pelas ferramentas de análise estática e padronização de estilo sem apontamentos (incluindo quebra de linha única ao final)?

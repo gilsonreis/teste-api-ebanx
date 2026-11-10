@@ -28,4 +28,3 @@ final readonly class GetBalanceUseCaseInput
         return new self((string) ($data['account_id'] ?? ''));
     }
 }
-
