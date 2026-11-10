@@ -3,6 +3,9 @@
     "rules": {
         "php_unit_method_casing": {
             "case": "camel_case"
+        },
+        "new_with_parentheses": {
+            "named_class": true
         }
     }
 }
