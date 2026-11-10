@@ -1,0 +1,38 @@
+openapi: 3.0.3
+info:
+  title: Documentation Endpoints Contract
+  version: 1.0.0
+  description: Contrato HTTP específico para as rotas de visualização e consumo da documentação da API.
+paths:
+  /docs:
+    get:
+      summary: Interface visual interativa da documentação da API
+      description: Retorna a página HTML que carrega o Scalar via CDN oficial e aponta para o contrato OpenAPI.
+      responses:
+        '200':
+          description: Página HTML carregada com sucesso.
+          content:
+            text/html; charset=UTF-8:
+              schema:
+                type: string
+                example: '<!DOCTYPE html><html>...</html>'
+
+  /docs/openapi.yaml:
+    get:
+      summary: Arquivo canônico da especificação OpenAPI 3.0
+      description: Retorna o arquivo de especificação OpenAPI no formato YAML diretamente do sistema de arquivos.
+      responses:
+        '200':
+          description: Conteúdo YAML do contrato da API.
+          content:
+            text/yaml; charset=UTF-8:
+              schema:
+                type: string
+        '404':
+          description: Arquivo de especificação não encontrado no servidor.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 'OpenAPI specification not found'
+

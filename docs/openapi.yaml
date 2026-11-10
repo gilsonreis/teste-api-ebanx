@@ -1,0 +1,201 @@
+openapi: 3.0.3
+info:
+  title: EBANX Software Engineer Take-Home API
+  version: 1.0.0
+  description: Especificação formal da API de gerenciamento de contas, eventos de saldo e liquidação financeira.
+servers:
+  - url: /
+    description: Servidor local / relativo
+paths:
+  /reset:
+    post:
+      summary: Redefine o estado global da aplicação
+      description: Expurga todas as contas e saldos existentes, restaurando o estado virgem da aplicação.
+      responses:
+        '200':
+          description: Estado resetado com sucesso.
+          content:
+            text/plain; charset=UTF-8:
+              schema:
+                type: string
+                example: OK
+
+  /balance:
+    get:
+      summary: Consulta o saldo de uma conta
+      description: Retorna o saldo numérico atual da conta informada de forma estritamente idempotente.
+      parameters:
+        - name: account_id
+          in: query
+          required: true
+          description: Identificador único da conta para consulta de saldo.
+          schema:
+            type: string
+          example: '100'
+      responses:
+        '200':
+          description: Conta encontrada com sucesso.
+          content:
+            text/plain; charset=UTF-8:
+              schema:
+                type: number
+                example: 20
+        '404':
+          description: Conta inexistente.
+          content:
+            text/plain; charset=UTF-8:
+              schema:
+                type: string
+                example: '0'
+        '422':
+          description: Parâmetro obrigatório ausente ou inválido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+
+  /event:
+    post:
+      summary: Processa um evento financeiro
+      description: Executa mutações de saldo de acordo com o tipo de evento (deposit, withdraw, transfer).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventRequest'
+            examples:
+              deposit:
+                summary: Depósito em conta
+                value:
+                  type: deposit
+                  destination: '100'
+                  amount: 10
+              withdraw:
+                summary: Saque de conta
+                value:
+                  type: withdraw
+                  origin: '100'
+                  amount: 5
+              transfer:
+                summary: Transferência entre contas
+                value:
+                  type: transfer
+                  origin: '100'
+                  amount: 15
+                  destination: '300'
+      responses:
+        '201':
+          description: Evento financeiro executado com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventResponse'
+              examples:
+                deposit_created:
+                  summary: Criação de conta via depósito
+                  value:
+                    destination:
+                      id: '100'
+                      balance: 10
+                withdraw_success:
+                  summary: Saque realizado com sucesso
+                  value:
+                    origin:
+                      id: '100'
+                      balance: 15
+                transfer_success:
+                  summary: Transferência realizada com sucesso
+                  value:
+                    origin:
+                      id: '100'
+                      balance: 0
+                    destination:
+                      id: '300'
+                      balance: 15
+        '404':
+          description: Conta de origem inexistente ou saldo insuficiente para saque ou transferência.
+          content:
+            text/plain; charset=UTF-8:
+              schema:
+                type: string
+                example: '0'
+        '422':
+          description: Erro de validação nos campos do payload de entrada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+
+components:
+  schemas:
+    Account:
+      type: object
+      required:
+        - id
+        - balance
+      properties:
+        id:
+          type: string
+          example: '100'
+          description: Identificador único da conta.
+        balance:
+          type: number
+          example: 20
+          description: Saldo numérico disponível.
+
+    EventRequest:
+      type: object
+      required:
+        - type
+        - amount
+      properties:
+        type:
+          type: string
+          enum:
+            - deposit
+            - withdraw
+            - transfer
+          description: Tipo de operação financeira.
+        amount:
+          type: number
+          minimum: 0.01
+          example: 10
+          description: Valor monetário da transação (deve ser estritamente maior que zero).
+        origin:
+          type: string
+          example: '100'
+          description: Identificador da conta de origem (obrigatório para withdraw e transfer).
+        destination:
+          type: string
+          example: '300'
+          description: Identificador da conta de destino (obrigatório para deposit e transfer).
+
+    EventResponse:
+      type: object
+      description: Objeto retornado após a execução bem-sucedida de um evento financeiro.
+      properties:
+        origin:
+          $ref: '#/components/schemas/Account'
+        destination:
+          $ref: '#/components/schemas/Account'
+
+    ValidationError:
+      type: object
+      required:
+        - message
+        - errors
+      properties:
+        message:
+          type: string
+          example: O campo destination é obrigatório quando o tipo for deposit.
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          example:
+            destination:
+              - O campo destination é obrigatório quando o tipo for deposit.
+
