@@ -53,12 +53,12 @@
 **Independent Test**: `php artisan test --filter=ResetEndpointTest`
 
 ### Tests for User Story 2 (TDD) ⚠️
-> **NOTE: Escrever os testes de feature primeiro cobrindo base limpa, limpeza de contas pré-existentes, tolerância a payloads e método inválido.**
+> **NOTE: Escrever os testes de feature primeiro cobrindo base limpa, limpeza de contas pré-existentes, tolerância permissiva a payloads e método inválido.**
 
 - [X] T007 [P] [US2] Create feature test for POST /reset endpoint in `tests/Feature/Account/ResetEndpointTest.php`
 
 ### Implementation for User Story 2
-- [X] T008 [US2] Implement Single-Action ResetController in `app/Http/Controllers/Account/ResetController.php`
+- [X] T008 [US2] Implement Single-Action ResetController (dispensando FormRequest por YAGNI) in `app/Http/Controllers/Account/ResetController.php`
 - [X] T009 [US2] Register route Route::post('/reset', ResetController::class) in `routes/api.php`
 
 **Checkpoint**: `ResetEndpointTest` passando com 100% de sucesso. O endpoint HTTP está integrado e funcional.
@@ -84,12 +84,30 @@
 - **User Story 2 (Phase 4)**: Depende da Phase 3 (`ResetStateUseCase` implementado para ser injetado no controller).
 - **Polish (Phase 5)**: Depende da conclusão das fases 3 e 4.
 
+### User Story Dependencies
+- **User Story 1 (P1)**: Pode iniciar após a Phase 2 (Foundational). Sem dependência de outras histórias.
+- **User Story 2 (P1)**: Depende da User Story 1 (`ResetStateUseCase` pronto para injeção no controller).
+
 ### Parallel Opportunities
 - **Phase 1**: `T002` pode ser executada em paralelo com `T001`.
 - **Phase 2**: `T003` (`ResetStateUseCaseInput`) e `T004` (`ResetStateUseCaseOutput`) podem ser criados em paralelo (arquivos distintos, sem dependência mútua).
 - **Phase 3**: `T005` (teste unitário) é escrito primeiro; `T006` implementa o UseCase.
 - **Phase 4**: `T007` (teste de feature) é escrito primeiro; `T008` (Controller) e `T009` (Registro da rota) completam a entrega.
-- **Phase 5**: `T010` (Pint) pode rodar antes ou em paralelo à análise estática `T011`.
+- **Phase 5**: `T010` (Pint) pode rodar em paralelo ou antes de `T011` e `T012`.
+
+---
+
+## Parallel Example: User Story 1 & 2
+
+```bash
+# Executar DTOs da Phase 2 em paralelo:
+Task: "Implement immutable input DTO in app/UseCases/Account/ResetState/ResetStateUseCaseInput.php"
+Task: "Implement immutable output DTO in app/UseCases/Account/ResetState/ResetStateUseCaseOutput.php"
+
+# Executar testes de User Story em paralelo ou de forma isolada:
+Task: "Create unit test for UseCase with repository mock in tests/Unit/UseCases/Account/ResetStateUseCaseTest.php"
+Task: "Create feature test for POST /reset endpoint in tests/Feature/Account/ResetEndpointTest.php"
+```
 
 ---
 
@@ -99,9 +117,10 @@
 1. Completar Setup (Phase 1) e Foundational (Phase 2).
 2. Escrever e rodar `ResetStateUseCaseTest` (Phase 3 - T005).
 3. Implementar `ResetStateUseCase` (Phase 3 - T006) e validar aprovação do teste unitário.
+4. **Checkpoint MVP**: O caso de uso opera de forma independente com mock de repositório.
 
 ### Entrega Completa (User Story 2 - Camada de Apresentação HTTP)
-4. Escrever `ResetEndpointTest` (Phase 4 - T007).
-5. Implementar `ResetController` (Phase 4 - T008) e mapear rota em `routes/api.php` (Phase 4 - T009).
-6. Executar suíte completa, Pint e Larastan (Phase 5 - T010, T011, T012).
-
+5. Escrever `ResetEndpointTest` (Phase 4 - T007).
+6. Implementar `ResetController` dispensando FormRequest (Phase 4 - T008) e mapear rota em `routes/api.php` (Phase 4 - T009).
+7. Validar todos os testes de feature HTTP.
+8. Executar suíte completa, Pint e Larastan (Phase 5 - T010, T011, T012).

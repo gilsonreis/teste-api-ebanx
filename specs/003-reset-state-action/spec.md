@@ -27,6 +27,7 @@ O objetivo é orquestrar essa operação respeitando a arquitetura limpa:
 - Q: Como a rota `POST /reset` deve ser configurada para operar sem o prefixo `/api` e sem bloqueio por verificação de CSRF? → A: Configurar `routes/api.php` em `bootstrap/app.php` com `apiPrefix: ''`, garantindo o pipeline stateless de API nativo do Laravel (sem sessão, sem cookies e sem CSRF) mantendo as rotas na raiz (`/reset`).
 - Q: Como deve ser estruturada a documentação OpenAPI e a interface interativa `/docs` para o endpoint `POST /reset` nesta entrega? → A: A criação de `docs/openapi.yaml` e da rota `/docs` fica explicitamente fora de escopo nesta entrega, concentrando esta especificação exclusivamente na implementação funcional e testes do endpoint `POST /reset`.
 - Q: Como o endpoint `POST /reset` deve tratar requisições que enviem corpo (payload) ou parâmetros de query inesperados? → A: Comportamento permissivo: ignorar parâmetros e corpos extras, executando o reset com sucesso e retornando `200 OK` com `'OK'`.
+- Q: O endpoint `POST /reset` deve utilizar um `FormRequest` dedicado ou o controller deve dispensá-lo por não haver dados a validar? → A: Dispensar o `FormRequest` por não haver campos a validar e o endpoint ignorar permissivamente payloads extras (aplicação do princípio YAGNI), injetando diretamente o `ResetStateUseCase` no `ResetController`.
 
 ---
 
@@ -66,6 +67,7 @@ O objetivo é orquestrar essa operação respeitando a arquitetura limpa:
 ### 4.1 Single-Action Controller (`ResetController`)
 - **Localização:** `app/Http/Controllers/Account/ResetController.php`
 - **Método:** `public function __invoke(ResetStateUseCase $useCase): Response`
+- **Validação HTTP (`FormRequest`):** Dispensada explicitamente (YAGNI), já que a operação não possui campos de entrada e ignora permissivamente quaisquer payloads adicionais.
 - **Comportamento:**
   1. Instancia `ResetStateUseCaseInput`.
   2. Executa `$output = $useCase->execute($input)`.

@@ -30,6 +30,7 @@ Implementar a ação de reset de estado da aplicação, orquestrando a restaura�
 
 **Constraints**:
 - Single-Action Controller usando o método mágico `__invoke` (`AGENTS.md` §3.1).
+- `FormRequest` dispensado explicitamente (YAGNI) por ausência de dados a validar e comportamento permissivo do endpoint.
 - Tríade do caso de uso (`UseCase`, `Input`, `Output`) coesa em `app/UseCases/Account/ResetState/` (`AGENTS.md` §3.2).
 - DTOs imutáveis declarados com `readonly` e tipagem estrita global (`AGENTS.md` §3.2 e §5.4).
 - Inversão de dependência total: o UseCase depende exclusivamente de `AccountRepositoryInterface` (`AGENTS.md` §1.5 e §3.2).
